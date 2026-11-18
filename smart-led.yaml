@@ -1,0 +1,42 @@
+
+esphome:
+  name: smart-led-controller
+  friendly_name: Smart LED Controller
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+logger:
+
+api:
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: "Excitel_Slomo"
+  password: "greenf0re$t"
+
+  ap:
+    ssid: "Smart-LED-Fallback"
+    password: "ChangeThisPassword123"
+
+captive_portal:
+
+light:
+  - platform: esp32_rmt_led_strip
+    id: led_strip
+    name: "WS2811 LED Strip"
+    pin: GPIO23
+    num_leds: 66
+    chipset: WS2811
+    rgb_order: GRB
+    is_rgbw: false
+    restore_mode: RESTORE_DEFAULT_OFF
+    default_transition_length: 1.5s
+
+web_server:
+  port: 80
+  
