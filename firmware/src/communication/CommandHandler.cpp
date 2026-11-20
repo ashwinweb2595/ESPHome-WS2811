@@ -232,14 +232,14 @@ String CommandHandler::handle(const String& jsonCommand) {
 
     if (protocol != PROTOCOL_VERSION) {
         return buildResponse(
-     const char* type       id,
+            id,
             false,
             "Unsupported protocol version",
             "Expected protocol version 1"
         );
     }
 
-     = request["type"] | "";
+    const char* type = request["type"] | "";
 
     JsonObjectConst payload =
         request["payload"].as<JsonObjectConst>();
