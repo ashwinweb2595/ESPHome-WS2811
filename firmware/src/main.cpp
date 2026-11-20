@@ -1,3 +1,4 @@
+
 #include <Arduino.h>
 
 #include "config/DeviceConfig.h"
@@ -21,20 +22,41 @@ void setup() {
     Serial.println();
     Serial.println("Smart LED Controller starting...");
 
-    ledEngine.begin();
-
-    if (settingsStore.begin()) {
-        DeviceSettings settings = settingsStore.load();
-        ledEngine.applySettings(settings);
-        Serial.println("Settings restored from ESP32 storage.");
-    } else {
-        Serial.println("Settings storage unavailable. Using defaults.");
+    // 1. Initialize persistent storage.
+    if (!settingsStore.begin()) {
+        Serial.println("Settings storage unavailable.");
     }
 
-    Serial.println("JSON command handler initialized.");
+    // 2. Load dynamic settings before initializing FastLED.
+    DynamicDeviceSettings settings =
+        settingsStore.loadDynamic(66);
 
-    Serial.printf("LED sections: %u\n", DeviceConfig::LED_COUNT);
-    Serial.printf("Segments: %u\n", DeviceConfig::SEGMENT_COUNT);
+    Serial.printf(
+        "Configured addressable pixels: %lu\n",
+        static_cast<unsigned long>(settings.totalLeds)
+    );
+
+    Serial.printf(
+        "Configured segments: %u\n",
+        static_cast<unsigned int>(settings.segments.size())
+    );
+
+    // 3. Initialize the LED engine with the saved pixel count.
+    if (!ledEngine.begin(settings.totalLeds)) {
+        Serial.println("ERROR: LED engine initialization failed.");
+        return;
+    }
+
+    // 4. Apply saved dynamic configuration.
+    if (!ledEngine.applyDynamicSettings(settings)) {
+        Serial.println("ERROR: Unable to apply saved configuration.");
+        return;
+    }
+
+    Serial.println("Dynamic LED configuration restored.");
+
+    // 5. Start communication services.
+    Serial.println("JSON command handler initialized.");
 
     networkManager.begin();
     bleManager.begin();
