@@ -11,17 +11,20 @@ esp32:
 logger:
 
 api:
+  encryption:
+    key: !secret api_encryption_key
 
 ota:
   - platform: esphome
+    password: !secret ota_password
 
 wifi:
-  ssid: "Excitel_Slomo"
-  password: "greenf0re$t"
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
 
   ap:
     ssid: "Smart-LED-Fallback"
-    password: "ChangeThisPassword123"
+    password: !secret fallback_password
 
 captive_portal:
 
@@ -39,4 +42,3 @@ light:
 
 web_server:
   port: 80
-  
