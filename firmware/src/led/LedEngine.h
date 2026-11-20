@@ -7,6 +7,10 @@ class LedEngine {
 public:
     void begin();
     void applySettings(const DeviceSettings& settings);
+    DeviceSettings getSettings() const {
+        return currentSettings;
+    }
+
     void setMasterBrightness(uint8_t brightness);
     bool setSegmentColor(uint8_t segment, uint32_t color);
     bool setSegmentBrightness(uint8_t segment, uint8_t brightness);

@@ -3,9 +3,16 @@
 #include "config/DeviceConfig.h"
 #include "led/LedEngine.h"
 #include "storage/SettingsStore.h"
+#include "communication/CommandHandler.h"
+#include "network/NetworkManager.h"
+#include "ble/BleManager.h"
 
 LedEngine ledEngine;
 SettingsStore settingsStore;
+CommandHandler commandHandler(ledEngine, settingsStore);
+
+NetworkManager networkManager(commandHandler);
+BleManager bleManager(commandHandler);
 
 void setup() {
     Serial.begin(115200);
@@ -24,12 +31,20 @@ void setup() {
         Serial.println("Settings storage unavailable. Using defaults.");
     }
 
-    Serial.println("LED engine initialized.");
+    Serial.println("JSON command handler initialized.");
+
     Serial.printf("LED sections: %u\n", DeviceConfig::LED_COUNT);
     Serial.printf("Segments: %u\n", DeviceConfig::SEGMENT_COUNT);
+
+    networkManager.begin();
+    bleManager.begin();
+
     Serial.println("Firmware initialization complete.");
 }
 
 void loop() {
-    delay(1000);
+    networkManager.loop();
+    bleManager.loop();
+
+    delay(2);
 }

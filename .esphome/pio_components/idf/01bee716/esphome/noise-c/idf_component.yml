@@ -1,0 +1,5 @@
+description: noise-c
+repository: https://github.com/esphome/noise-c.git
+dependencies:
+  esphome/libsodium:
+    override_path: C:\Users\anand\Documents\ESPHome-WS2811\.esphome\pio_components\idf\8368762d\esphome\libsodium

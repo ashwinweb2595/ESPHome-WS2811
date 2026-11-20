@@ -1,0 +1,34 @@
+#ifndef esphome_x25519_m15_H
+#define esphome_x25519_m15_H
+
+#include "sodium/esphome_platform.h"
+
+/* ESPHome port: X25519 ladder and base point multiply built on BearSSL's m15
+   field arithmetic (port/x25519_m15.c). They replace ref10's on the cores
+   without a 32x32->64 multiply that esphome_platform.h recognises (ESP8266,
+   Cortex-M0+). Cores with the wide multiply, ESP32 and the RP2350's
+   Cortex-M33 included, are faster on ref10 and keep it; there the functions
+   are compiled but unused. */
+#ifdef SODIUM_ESPHOME_NARROW_MUL
+#define SODIUM_ESPHOME_X25519_M15 1
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* q = n * p on Curve25519; n and p are the 32 byte little endian X25519
+   scalar and u coordinate. Always returns 0; the caller rejects an all zero
+   result, which is what a small order point produces. */
+int sodium_esphome_x25519_m15(unsigned char *q, const unsigned char *n,
+                              const unsigned char *p);
+
+/* Base point multiply for the same cores: the ref10 walk over the packed
+   Edwards table, with the point arithmetic on the 13-bit limbs. */
+int sodium_esphome_x25519_m15_base(unsigned char *q, const unsigned char *n);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
