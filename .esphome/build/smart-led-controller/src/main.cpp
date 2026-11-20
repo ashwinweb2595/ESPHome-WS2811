@@ -173,8 +173,8 @@ void setup() {
   wifi_wificomponent_id->init_sta(1);
   {
   wifi::WiFiAP wifi_wifiap_id_2 = wifi::WiFiAP();
-  wifi_wifiap_id_2.set_ssid("Excitel_Slomo");
-  wifi_wifiap_id_2.set_password("greenf0re$t");
+  wifi_wifiap_id_2.set_ssid("Ashwin_Test");
+  wifi_wifiap_id_2.set_password("Ashwin12345");
   wifi_wificomponent_id->add_sta(wifi_wifiap_id_2);
   }
   {
